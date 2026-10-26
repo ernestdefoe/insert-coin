@@ -44,7 +44,7 @@ export default class Celebration extends Component<CelebrationAttrs> {
           <div className="InsertCoinCelebration-title">{t('cabinet.new_champion')}</div>
           <div className="InsertCoinCelebration-score">{this.attrs.score}</div>
           {this.attrs.previous ? (
-            <div className="InsertCoinCelebration-sub">{t('cabinet.dethroned', { user: this.attrs.previous.displayName })}</div>
+            <div className="InsertCoinCelebration-sub">{t('cabinet.dethroned', { player: this.attrs.previous.displayName })}</div>
           ) : null}
         </div>
       </div>

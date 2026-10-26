@@ -175,7 +175,7 @@ export default class ArcadePage extends Page {
                       <div className="InsertCoinCrowns-text">
                         <div>
                           {t(crown.previous ? 'home.crown_took' : 'home.crown_first', {
-                            user: <b>{crown.user.displayName}</b>,
+                            player: <b>{crown.user.displayName}</b>,
                             previous: crown.previous ? <b>{crown.previous.displayName}</b> : '',
                             game: <Link href={app.route('insert-coin.game', { slug: game.slug })}>{game.title}</Link>,
                           })}

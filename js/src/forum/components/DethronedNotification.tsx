@@ -2,7 +2,7 @@ import app from 'flarum/forum/app';
 import Notification from 'flarum/forum/components/Notification';
 import { t } from '../t';
 
-/** "You've been dethroned on {game} by {user}." */
+/** "You've been dethroned on {game} by {username}." */
 export default class DethronedNotification extends Notification {
   icon() {
     return 'fas fa-crown';
@@ -18,7 +18,8 @@ export default class DethronedNotification extends Notification {
     const game: any = this.attrs.notification.subject();
     const user = this.attrs.notification.fromUser();
 
-    return t('notifications.dethroned', { game: game?.title?.() || '', user: user ? user.displayName() : '' });
+    // Core's convention: pass the user model as `user` and the string reads {username}.
+    return t('notifications.dethroned', { game: game?.title?.() || '', user });
   }
 
   excerpt() {

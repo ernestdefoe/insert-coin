@@ -21,8 +21,8 @@ ernestdefoe-insert-coin:
       hall_empty: Nobody holds a crown yet. Be the first.
       recent_crowns: Recent crowns
       crowns_empty: No crowns have changed hands yet.
-      crown_took: "{user} took {game} from {previous}"
-      crown_first: "{user} claimed {game}"
+      crown_took: "{player} took {game} from {previous}"
+      crown_first: "{player} claimed {game}"
 
     card:
       play: Play
@@ -53,7 +53,7 @@ ernestdefoe-insert-coin:
       personal_best: New personal best!
       you_are_champion: You hold the crown!
       new_champion: NEW CHAMPION
-      dethroned: "You dethroned {user}."
+      dethroned: "You dethroned {player}."
       rank: "Your best: {best} · #{rank} all time"
       held_crown: This would take the crown, so a moderator checks it first.
       held_review: This score is held for a moderator to review.
@@ -99,16 +99,16 @@ ernestdefoe-insert-coin:
       wipe_game: Wipe this game's scores
       wipe_game_confirm: "Wipe every score on {game}? Its crown and leaderboard start over. This can't be undone."
       wipe_user_game: Wipe their scores here
-      wipe_user_game_confirm: "Wipe {user}'s scores on {game}?"
+      wipe_user_game_confirm: "Wipe {player}'s scores on {game}?"
       wipe_user: Wipe all their scores
-      wipe_user_confirm: "Wipe all of {user}'s arcade scores? Their crowns pass to whoever is next."
+      wipe_user_confirm: "Wipe all of {player}'s arcade scores? Their crowns pass to whoever is next."
       ban: Ban from the arcade
       ban_and_wipe: Ban and wipe their scores
-      ban_confirm: "Ban {user} from posting arcade scores?"
+      ban_confirm: "Ban {player} from posting arcade scores?"
       unban: Lift arcade ban
 
     notifications:
-      dethroned: "You've been dethroned on {game} by {user}"
+      dethroned: "You've been dethroned on {game} by {username}"
 
     settings:
       notify_dethroned: Someone takes a crown from me in the arcade

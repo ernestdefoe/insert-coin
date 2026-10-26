@@ -70,7 +70,7 @@ export default class UserArcadePage extends UserPage {
                 onclick={() => {
                   const done = data.banned
                     ? unban(data.user.id)
-                    : confirm(extractText(t('moderate.ban_confirm', { user: data.user.displayName })))
+                    : confirm(extractText(t('moderate.ban_confirm', { player: data.user.displayName })))
                       ? ban(data.user.id, false)
                       : null;
                   done?.then(() => this.reload());
@@ -82,7 +82,7 @@ export default class UserArcadePage extends UserPage {
                 className="Button"
                 icon="fas fa-eraser"
                 onclick={() =>
-                  confirm(extractText(t('moderate.wipe_user_confirm', { user: data.user.displayName }))) &&
+                  confirm(extractText(t('moderate.wipe_user_confirm', { player: data.user.displayName }))) &&
                   wipeUser(data.user.id).then(() => this.reload())
                 }
               >

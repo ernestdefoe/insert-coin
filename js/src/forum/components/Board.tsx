@@ -143,12 +143,12 @@ export default class Board extends Component<BoardAttrs> {
         <Button
           icon="fas fa-eraser"
           onclick={() =>
-            confirm(extractText(t('moderate.wipe_user_game_confirm', { user: name, game: game.title }))) && wipeGame(game.id, userId).then(done)
+            confirm(extractText(t('moderate.wipe_user_game_confirm', { player: name, game: game.title }))) && wipeGame(game.id, userId).then(done)
           }
         >
           {t('moderate.wipe_user_game')}
         </Button>
-        <Button icon="fas fa-ban" onclick={() => confirm(extractText(t('moderate.ban_confirm', { user: name }))) && ban(userId, true).then(done)}>
+        <Button icon="fas fa-ban" onclick={() => confirm(extractText(t('moderate.ban_confirm', { player: name }))) && ban(userId, true).then(done)}>
           {t('moderate.ban_and_wipe')}
         </Button>
       </Dropdown>
