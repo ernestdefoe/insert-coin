@@ -18,6 +18,61 @@
 (function (w) {
   if (w.InsertCoin) return;
 
+  // In the arcade's sandbox a game has no origin of its own, so the browser
+  // refuses it localStorage, sessionStorage and cookies, and many games
+  // written for the open web crash on their first high-score save. Stand in
+  // with storage that lasts for the visit; the arcade's boards keep scores.
+  function memoryStorage() {
+    var data = {};
+    return {
+      get length() {
+        return Object.keys(data).length;
+      },
+      key: function (i) {
+        return Object.keys(data)[i] || null;
+      },
+      getItem: function (k) {
+        return Object.prototype.hasOwnProperty.call(data, k) ? data[k] : null;
+      },
+      setItem: function (k, v) {
+        data[k] = String(v);
+      },
+      removeItem: function (k) {
+        delete data[k];
+      },
+      clear: function () {
+        data = {};
+      },
+    };
+  }
+
+  ['localStorage', 'sessionStorage'].forEach(function (name) {
+    try {
+      w[name].getItem('insertcoin');
+    } catch (e) {
+      try {
+        Object.defineProperty(w, name, { value: memoryStorage(), configurable: true });
+      } catch (e2) {}
+    }
+  });
+
+  try {
+    void w.document.cookie;
+  } catch (e) {
+    try {
+      var jar = '';
+      Object.defineProperty(w.document, 'cookie', {
+        get: function () {
+          return jar;
+        },
+        set: function (v) {
+          jar = String(v).split(';')[0];
+        },
+        configurable: true,
+      });
+    } catch (e2) {}
+  }
+
   var host = w.parent && w.parent !== w ? w.parent : null;
   var handlers = {};
   var muted = false;

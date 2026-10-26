@@ -228,6 +228,20 @@ ernestdefoe-insert-coin:
       crown_approval: Moderators approve new crowns
       crown_approval_help: A score that would take this game's crown waits in the moderation queue until it's approved.
 
+    more:
+      title: More games
+      help: Any HTML5 game can run in the arcade, and three lines of code put its scores on the boards. Check each game's licence before you upload it.
+      guide: Making games work with Insert Coin
+      guide_help: The score SDK, the pack format, the sandbox, and adapting a game you found.
+      js13k: js13kGames
+      js13k_help: A yearly contest of tiny arcade games, many of them open source.
+      github: Open-source HTML5 games on GitHub
+      github_help: Games whose licence and code you can read, and change.
+      itch: Free HTML5 games on itch.io
+      itch_help: The biggest catalogue of indie browser games; ask the author before using one.
+      example: The example pack
+      example_help: A complete, tiny game to copy. Zip the folder and upload it.
+
     categories:
       title: Categories
       help: Drag to set their order on the arcade floor.

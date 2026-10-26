@@ -40,6 +40,7 @@ export default class ArcadeAdminPage extends ExtensionPage {
     const items = super.sections(vnode);
     items.add('games', this.gamesSection(), 95);
     items.add('categories', this.categoriesSection(), 90);
+    items.add('more', this.moreSection(), 85);
     return items;
   }
 
@@ -165,6 +166,36 @@ export default class ArcadeAdminPage extends ExtensionPage {
           <Button className="Button" icon="fas fa-plus" onclick={() => this.editCategory(null)}>
             {t('categories.add')}
           </Button>
+        </div>
+      </div>
+    );
+  }
+
+  moreSection(): Mithril.Children {
+    const docs = 'https://github.com/ernestdefoe/insert-coin/blob/main/docs/MAKING-GAMES.md';
+    const links: [string, string][] = [
+      ['guide', docs],
+      ['js13k', 'https://js13kgames.com'],
+      ['github', 'https://github.com/topics/html5-game'],
+      ['itch', 'https://itch.io/games/free/html5'],
+      ['example', 'https://github.com/ernestdefoe/insert-coin/tree/main/examples/hello-arcade'],
+    ];
+
+    return (
+      <div className="ExtensionPage-settings InsertCoinAdmin">
+        <div className="container">
+          <h3 className="ExtensionTitle">{t('more.title')}</h3>
+          <p className="helpText">{t('more.help')}</p>
+          <ul className="InsertCoinAdmin-more">
+            {links.map(([key, href]) => (
+              <li>
+                <a href={href} target="_blank" rel="noopener noreferrer">
+                  {t('more.' + key)}
+                </a>
+                <span className="helpText">{t('more.' + key + '_help')}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     );

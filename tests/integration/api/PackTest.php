@@ -104,6 +104,24 @@ class PackTest extends ArcadeTestCase
     }
 
     #[Test]
+    public function the_example_pack_in_the_guide_installs(): void
+    {
+        $dir = dirname(__DIR__, 3).'/examples/hello-arcade';
+        $files = [];
+        foreach (scandir($dir) as $name) {
+            if (is_file("$dir/$name")) {
+                $files["hello-arcade/$name"] = (string) file_get_contents("$dir/$name");
+            }
+        }
+
+        [$status, $body, $raw] = $this->upload($this->zip($files));
+        $this->assertSame(201, $status, $raw);
+        $this->assertSame('hello-arcade', $body['data']['slug']);
+        $this->assertSame('hits', $body['data']['scoreLabel']);
+        $this->assertNotNull($body['data']['thumbnailUrl']);
+    }
+
+    #[Test]
     public function replacing_a_pack_keeps_the_game_and_removes_the_old_files(): void
     {
         [, $first] = $this->upload($this->zip(['insertcoin.json' => $this->manifest(), 'index.html' => '<html><head></head></html>', 'a.js' => '1']));
