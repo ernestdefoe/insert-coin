@@ -21,12 +21,22 @@ export interface CabinetAttrs extends ComponentAttrs {
 type State = 'idle' | 'starting' | 'playing' | 'over';
 
 const MUTE_KEY = 'insertcoin-muted';
+const CRT_KEY = 'insertcoin-crt';
 
-function stored(): boolean {
+function stored(key: string, fallback: boolean): boolean {
   try {
-    return localStorage.getItem(MUTE_KEY) === '1';
+    const value = localStorage.getItem(key);
+    return value === null ? fallback : value === '1';
   } catch (e) {
-    return false;
+    return fallback;
+  }
+}
+
+function store(key: string, on: boolean) {
+  try {
+    localStorage.setItem(key, on ? '1' : '0');
+  } catch (e) {
+    // Private mode: the switch still works for this visit.
   }
 }
 
@@ -47,7 +57,10 @@ export default class Cabinet extends Component<CabinetAttrs> {
   result: Submitted | null = null;
   submitting = false;
   failed: string | null = null;
-  muted = stored();
+  muted = stored(MUTE_KEY, false);
+  /** Scanlines and curved glass over the screen: the old cabinet look, on by default. */
+  crt = stored(CRT_KEY, true);
+  credits = 0;
   theatre = false;
   fullscreen = false;
   celebrate = false;
@@ -123,6 +136,7 @@ export default class Cabinet extends Component<CabinetAttrs> {
   }
 
   go() {
+    this.credits++;
     this.phase = 'playing';
     this.post('start');
     this.frame?.focus();
@@ -172,11 +186,7 @@ export default class Cabinet extends Component<CabinetAttrs> {
 
   toggleMute() {
     this.muted = !this.muted;
-    try {
-      localStorage.setItem(MUTE_KEY, this.muted ? '1' : '0');
-    } catch (e) {
-      // Private mode: the switch still works for this visit.
-    }
+    store(MUTE_KEY, this.muted);
     this.post('mute', { muted: this.muted });
   }
 
@@ -213,7 +223,7 @@ export default class Cabinet extends Component<CabinetAttrs> {
       <div className={classList('InsertCoinCabinet', { 'is-theatre': this.theatre, 'is-playing': this.phase === 'playing' })}>
         {this.theatre ? <div className="InsertCoinTheatre-backdrop" onclick={() => this.setTheatre(false)} /> : null}
         <div
-          className={classList('InsertCoinScreen', { 'InsertCoinScreen--fluid': game.source === 'bundled' })}
+          className={classList('InsertCoinScreen', { 'InsertCoinScreen--fluid': game.source === 'bundled', 'InsertCoinScreen--crt': this.crt })}
           style={{ '--ic-ratio': ratio, '--ic-w': String(game.width), '--ic-h': String(game.height) }}
         >
           {src ? (
@@ -252,6 +262,17 @@ export default class Cabinet extends Component<CabinetAttrs> {
         <div className="InsertCoinCabinet-controls">
           <Button className="Button Button--flat" icon={this.muted ? 'fas fa-volume-xmark' : 'fas fa-volume-high'} onclick={() => this.toggleMute()}>
             {t(this.muted ? 'cabinet.unmute' : 'cabinet.mute')}
+          </Button>
+          <Button
+            className={'Button Button--flat' + (this.crt ? ' active' : '')}
+            icon="fas fa-tv"
+            aria-pressed={this.crt}
+            onclick={() => {
+              this.crt = !this.crt;
+              store(CRT_KEY, this.crt);
+            }}
+          >
+            {t('cabinet.crt')}
           </Button>
           <Button
             className={'Button Button--flat' + (this.theatre ? ' active' : '')}
@@ -347,8 +368,15 @@ export default class Cabinet extends Component<CabinetAttrs> {
       );
     }
 
+    const champion = game.champion;
+
     return (
       <div className="InsertCoinOverlay">
+        <div className="InsertCoinOverlay-hiscore">
+          <span>{t('cabinet.hi_score')}</span>
+          <b>{champion ? formatScore(champion.score, null, false) : '—'}</b>
+          {champion?.user ? <span>{champion.user.displayName}</span> : null}
+        </div>
         <div className="InsertCoinOverlay-marquee InsertCoinOverlay-marquee--blink">{t('cabinet.insert_coin')}</div>
         <div className="InsertCoinOverlay-title">{game.title}</div>
         <Button className="Button Button--primary InsertCoinOverlay-start" icon="fas fa-play" onclick={() => this.start()}>
@@ -360,6 +388,7 @@ export default class Cabinet extends Component<CabinetAttrs> {
             <Icon name="fas fa-keyboard" /> {t('cabinet.keyboard')}
           </p>
         ) : null}
+        <div className="InsertCoinOverlay-credit">{t('cabinet.credit', { count: String(this.credits).padStart(2, '0') })}</div>
       </div>
     );
   }

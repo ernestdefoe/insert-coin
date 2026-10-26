@@ -40,6 +40,9 @@ ernestdefoe-insert-coin:
 
     cabinet:
       insert_coin: INSERT COIN
+      hi_score: HI-SCORE
+      credit: "CREDIT {count}"
+      crt: CRT
       press_start: Press start
       game_over: GAME OVER
       play_again: Play again
@@ -63,7 +66,7 @@ ernestdefoe-insert-coin:
       no_permission: Your scores aren't saved here.
 
     board:
-      title: Leaderboard
+      title: High scores
       all: All time
       month: This month
       week: This week
