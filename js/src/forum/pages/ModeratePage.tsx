@@ -26,7 +26,8 @@ export default class ModeratePage extends Page {
     super.oninit(vnode);
     app.setTitle(extractText(t('moderate.title')));
     app.history.push('insert-coin.moderate', extractText(t('moderate.title')));
-    this.load();
+    // Nobody else gets an answer from the queue: don't ask.
+    if (app.forum.attribute('canModerateArcade')) this.load();
   }
 
   load(more = false) {
