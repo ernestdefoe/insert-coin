@@ -7,3 +7,4 @@ composer.lock
 /tests/integration/tmp
 /js/coverage-ts
 /.npm.log
+/js/generated

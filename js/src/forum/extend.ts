@@ -10,15 +10,20 @@ export class ArcadeGame extends Model {
   scoreLabel = Model.attribute<string | null>('scoreLabel');
 }
 
+function withStyles<T>(page: Promise<T>): Promise<T> {
+  return Promise.all([page, import('./styles')]).then(([module]) => module);
+}
+
 export default [
   new Extend.Store().add('insert-coin-games', ArcadeGame),
 
   new Extend.Notification().add('insertCoinDethroned', DethronedNotification),
 
-  // Every page is its own chunk: nothing of the arcade loads on other pages.
+  // Every page is its own chunk, and its styles one more, shared by all of
+  // them: nothing of the arcade loads on the forum's other pages.
   new Extend.Routes()
-    .add('insert-coin.home', '/arcade', () => import('./pages/ArcadePage'))
-    .add('insert-coin.moderate', '/arcade/moderate', () => import('./pages/ModeratePage'))
-    .add('insert-coin.game', '/arcade/:slug', () => import('./pages/GamePage'))
-    .add('user.arcade', '/u/:username/arcade', () => import('./pages/UserArcadePage')),
+    .add('insert-coin.home', '/arcade', () => withStyles(import('./pages/ArcadePage')))
+    .add('insert-coin.moderate', '/arcade/moderate', () => withStyles(import('./pages/ModeratePage')))
+    .add('insert-coin.game', '/arcade/:slug', () => withStyles(import('./pages/GamePage')))
+    .add('user.arcade', '/u/:username/arcade', () => withStyles(import('./pages/UserArcadePage'))),
 ];
