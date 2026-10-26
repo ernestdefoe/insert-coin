@@ -136,14 +136,16 @@ class PackInstaller
         $oldThumbnail = $replace?->thumbnail;
 
         try {
+            // Streamed, so a large sound or video file never sits in memory whole.
             foreach ($write as $relative => $index) {
-                $contents = $zip->getFromIndex($index);
+                $stream = $zip->getStreamIndex($index);
 
-                if ($contents === false) {
+                if ($stream === false) {
                     $this->refuse('bad_zip');
                 }
 
-                $this->assets->put($base.$relative, $contents);
+                $this->assets->writeStream($base.$relative, $stream);
+                fclose($stream);
             }
 
             if (! $this->assets->exists('insert-coin/packs/.htaccess')) {
