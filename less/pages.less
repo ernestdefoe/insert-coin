@@ -765,11 +765,14 @@
   }
 }
 
-// Theatre: the page dims and the cabinet takes the width.
+// Theatre: the page dims and the cabinet takes the width. The backdrop is
+// the cabinet's own child, and the cabinet's z-index makes it a stacking
+// context: -1 keeps the backdrop under the screen and controls while the
+// cabinet as a whole still sits over the page.
 .InsertCoinTheatre-backdrop {
   position: fixed;
   inset: 0;
-  z-index: calc(var(--zindex-header) + 1);
+  z-index: -1;
   background: rgba(0, 0, 0, 0.88);
 }
 
@@ -813,6 +816,11 @@
 
 .InsertCoin--theatre {
   overflow: hidden;
+
+  // Mobile Tab's bar would cover the theatre controls and their way out.
+  .MobileTab-bar {
+    display: none;
+  }
 
   .InsertCoinGamePage .Page-sidebar {
     display: none;
