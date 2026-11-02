@@ -171,6 +171,29 @@ class ChampionTest extends ArcadeTestCase
     }
 
     #[Test]
+    public function wiping_a_member_who_holds_no_crown_leaves_the_champion_alone(): void
+    {
+        $this->play(2, 'coil', 900);
+        $this->play(3, 'coil', 500);
+        $since = $this->database()->table('insertcoin_games')->where('slug', 'coil')->value('champion_since');
+
+        [$status] = $this->json('DELETE', '/api/insert-coin/users/3/scores', 1);
+        $this->assertSame(204, $status);
+
+        $this->assertSame(2, $this->championOf('coil'));
+        $this->assertSame($since, $this->database()->table('insertcoin_games')->where('slug', 'coil')->value('champion_since'));
+        $this->assertSame(1, $this->crowns(2));
+        $this->assertSame(0, $this->database()->table('insertcoin_bests')->where('user_id', 3)->count());
+    }
+
+    #[Test]
+    public function the_session_secret_is_made_by_the_migration(): void
+    {
+        $this->app();
+        $this->assertSame(64, strlen((string) $this->database()->table('settings')->where('key', 'ernestdefoe-insert-coin.secret')->value('value')));
+    }
+
+    #[Test]
     public function wiping_a_game_starts_it_over(): void
     {
         $this->play(2, 'coil', 500);

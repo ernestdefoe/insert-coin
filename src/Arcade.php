@@ -83,6 +83,10 @@ class Arcade
         return $session->started_at->copy()->addSeconds($game->max_seconds);
     }
 
+    /**
+     * The migration creates the secret, so first plays can't race to write
+     * two different ones; this fallback only covers a missing setting.
+     */
     protected function secret(): string
     {
         $secret = (string) $this->settings->get(self::PREFIX.'secret');
@@ -337,7 +341,9 @@ class Arcade
     public function wipeUser(int $userId): void
     {
         $this->db->transaction(function () use ($userId) {
-            $gameIds = Best::query()->where('user_id', $userId)->pluck('game_id')->all();
+            // Only the games they hold the crown on change hands: dropping
+            // anyone else's best leaves the top of the board where it is.
+            $gameIds = Game::query()->where('champion_user_id', $userId)->pluck('id')->all();
 
             foreach ([Score::query(), Best::query(), Crown::query()] as $query) {
                 $query->where('user_id', $userId)->delete();

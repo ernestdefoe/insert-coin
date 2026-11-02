@@ -122,6 +122,21 @@ class PackTest extends ArcadeTestCase
     }
 
     #[Test]
+    public function a_taken_slug_gets_the_next_free_number(): void
+    {
+        $pack = fn () => $this->zip(['insertcoin.json' => $this->manifest(), 'index.html' => '<html><head></head></html>']);
+
+        $slugs = [];
+        foreach (range(1, 3) as $i) {
+            [$status, $body, $raw] = $this->upload($pack());
+            $this->assertSame(201, $status, $raw);
+            $slugs[] = $body['data']['slug'];
+        }
+
+        $this->assertSame(['space-pong', 'space-pong-2', 'space-pong-3'], $slugs);
+    }
+
+    #[Test]
     public function replacing_a_pack_keeps_the_game_and_removes_the_old_files(): void
     {
         [, $first] = $this->upload($this->zip(['insertcoin.json' => $this->manifest(), 'index.html' => '<html><head></head></html>', 'a.js' => '1']));

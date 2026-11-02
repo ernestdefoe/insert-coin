@@ -41,6 +41,8 @@ class FrameController implements RequestHandlerInterface
         }
 
         $base = $renderer->baseUrl($game);
+        // A 4 KB file once per cabinet load (the response itself is cached a
+        // day): reading it is cheaper than any cache lookup would be.
         $inject = ($base ? '<base href="'.htmlspecialchars($base, ENT_QUOTES).'">' : '')
             .'<script>'.file_get_contents(dirname(__DIR__, 2).'/assets/sdk/insertcoin.js').'</script>';
 

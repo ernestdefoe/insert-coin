@@ -307,8 +307,11 @@ class PackInstaller
     {
         $slug = Str::limit($slug, 80, '');
         $try = $slug;
+        // One query for every slug this one could collide with, so the loop
+        // below ends within count($taken) + 1 tries. Str::slug leaves no % or _.
+        $taken = Game::query()->where('slug', $slug)->orWhere('slug', 'like', $slug.'-%')->pluck('slug')->all();
 
-        for ($n = 2; in_array($try, Game::RESERVED, true) || ctype_digit($try) || Game::query()->where('slug', $try)->exists(); $n++) {
+        for ($n = 2; in_array($try, Game::RESERVED, true) || ctype_digit($try) || in_array($try, $taken, true); $n++) {
             $try = $slug.'-'.$n;
         }
 
